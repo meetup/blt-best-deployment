@@ -3,6 +3,7 @@ TARGET_DIR=$(PROJECT_DIR)target
 
 SHELL = /bin/bash
 
+CI_BUILD_NUMBER ?= $(USER)-snapshot
 VERSION ?= $(CI_BUILD_NUMBER)
 DATE=$(shell date +%Y-%m-%dT%H_%M_%S)
 
@@ -24,8 +25,7 @@ help:
 # required for list
 no_op__:
 
-# Required for SBT.
-version:
+version: ## Convenience for knowing version in current context.
 	@echo $(VERSION)
 
 deploy: __get-credentials __deploy-only ## Does full deployment.
