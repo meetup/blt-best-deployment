@@ -42,7 +42,7 @@ __deploy-only: ## Does deployment without setting creds. (current kubectl ctx)
 # Check on deployment with a 1 min timeout (new replicas never came up)
 #  if we timeout rollback and error out.
 	@timeout 1m kubectl rollout status deploy deployment --namespace best || { \
-		if [ "$?" == "124" ]; then \
+		if [ "$$?" == "124" ]; then \
 			echo "Deployment timed out"; \
 			kubectl rollout undo deploy deployment --namespace best; \
 		fi; \
