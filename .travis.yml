@@ -1,10 +1,5 @@
 language: bash
 
-# Only build pushes to master.
-branches:
-  except:
-    - /^\d+$/
-
 env:
   global:
     - CI_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER
@@ -16,7 +11,11 @@ cache:
 
 before_install:
   # Install or update GCloud
-  - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
+  - >
+    if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then
+      rm -rf $HOME/google-cloud-sdk;
+      curl https://sdk.cloud.google.com | bash;
+    fi
   - source "$HOME/google-cloud-sdk/path.bash.inc"
   - gcloud --quiet version
   - gcloud --quiet components update

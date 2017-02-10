@@ -1,11 +1,8 @@
-PROJECT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-TARGET_DIR=$(PROJECT_DIR)target
-
 SHELL = /bin/bash
 
 CI_BUILD_NUMBER ?= $(USER)-snapshot
 VERSION ?= $(CI_BUILD_NUMBER)
-DATE=$(shell date +%Y-%m-%dT%H_%M_%S)
+DATE = $(shell date +%Y-%m-%dT%H_%M_%S)
 
 # Deployment target information
 # Override these in an env.
@@ -18,12 +15,9 @@ FAIL_REQUEST ?= false
 
 help:
 	@echo Public targets:
-	@grep -E '^[^_][^_][a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[^_]{2}[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 	@echo "Private targets: (use at own risk)"
 	@grep -E '^__[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[35m%-20s\033[0m %s\n", $$1, $$2}'
-
-# required for list
-no_op__:
 
 version: ## Convenience for knowing version in current context.
 	@echo $(VERSION)
