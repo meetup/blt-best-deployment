@@ -31,6 +31,5 @@ script:
   - echo "nothing to do here"
 
 after_success:
-  - >
-    [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "master" ] &&
-    make deploy
+  - "false"
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then make deploy; fi
