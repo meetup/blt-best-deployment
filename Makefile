@@ -14,7 +14,7 @@ CLUSTER ?= your-cluster
 PROJECT ?= your-project
 
 # Tells our deployment to fail or not.
-FAIL_REQUEST ?= true
+FAIL_REQUEST ?= false
 
 help:
 	@echo Public targets:
@@ -43,7 +43,7 @@ __deploy-only: ## Does deployment without setting creds. (current kubectl ctx)
 #  if we timeout rollback and error out.
 	@timeout 1m kubectl rollout status deploy deployment --namespace best || { \
 		if [ "$$?" == "124" ]; then \
-			echo "Deployment timed out"; \
+			echo "Deployment timed out, rolling back"; \
 			kubectl rollout undo deploy deployment --namespace best; \
 		fi; \
 		false; \
