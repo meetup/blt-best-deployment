@@ -31,11 +31,21 @@ deploy: __get-credentials __deploy-only ## Does full deployment.
 __deploy-only: ## Does deployment without setting creds. (current kubectl ctx)
 	@kubectl apply -f infra/deployment-ns.yaml
 	@kubectl apply -f infra/deployment-cm.yaml
+
+# Perform our deployment.
 	@DATE=$(DATE) \
 		FAIL_REQUEST=$(FAIL_REQUEST) \
 		envtpl < infra/deployment-deploy.yaml | kubectl apply -f -
-	@timeout 5m kubectl rollout status deploy deployment || \
-		{ echo "Deployment timedout"; kubectl rollout undo deploy deployment; false; }
+
+# Check on deployment with a 5 min timeout (new replicas never came up)
+#  if we timeout rollback and error out.
+	@timeout 5m kubectl rollout status deploy deployment --namespace best || { \
+		if [ "$?" == "124" ]; then \
+			echo "Deployment timed out"; \
+			kubectl rollout undo deploy deployment --namespace best; \
+		fi; \
+		false; \
+	}
 
 __get-credentials: ## Set kubectl ctx to curent cluster config.
 	@gcloud container clusters get-credentials \

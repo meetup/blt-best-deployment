@@ -28,8 +28,4 @@ install:
   - export PATH="$PATH:${HOME}/.local/bin/"
 
 script:
-  - echo "nothing to do here"
-
-after_success:
-  - "false"
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then make deploy; fi
