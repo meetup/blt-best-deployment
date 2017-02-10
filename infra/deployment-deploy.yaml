@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: deployment
+  namespace: best
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+  selector:
+      matchLabels:
+        name: deployment
+  template:
+    metadata:
+      labels:
+        name: deployment
+        date: "{{ DATE }}"
+    spec:
+      volumes:
+      - name: deployment-config
+        configMap:
+          name: deployment
+      containers:
+      - name: deployment
+        image: node:7.4.0-alpine
+        imagePullPolicy: Always
+        env:
+        - name: FAIL_REQUEST
+          value: "{{ FAIL_REQUEST }}"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+        args:
+        - "node"
+        - "/usr/src/app/index.js"
+        volumeMounts:
+        - name: deployment-config
+          mountPath: /usr/src/app/
