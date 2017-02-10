@@ -13,7 +13,7 @@ CLUSTER ?= your-cluster
 PROJECT ?= your-project
 
 # Tells our deployment to fail or not.
-FAIL_REQUEST ?= true
+FAIL_REQUEST ?= false
 
 help:
 	@echo Public targets:
