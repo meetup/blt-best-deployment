@@ -31,14 +31,12 @@ before_deploy:
   - pip install --user envtpl
   - export PATH="$PATH:${HOME}/.local/bin/"
 
-install:
-
-
 script:
   - echo "This project does not build"
 
 deploy:
   - provider: script
     script: make deploy
+    skip_cleanup: true
     on:
       branch: master
