@@ -1,6 +1,8 @@
 PROJECT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 TARGET_DIR=$(PROJECT_DIR)target
 
+SHELL = /bin/bash
+
 VERSION ?= $(CI_BUILD_NUMBER)
 DATE=$(shell date +%Y-%m-%dT%H_%M_%S)
 
@@ -37,9 +39,9 @@ __deploy-only: ## Does deployment without setting creds. (current kubectl ctx)
 		FAIL_REQUEST=$(FAIL_REQUEST) \
 		envtpl < infra/deployment-deploy.yaml | kubectl apply -f -
 
-# Check on deployment with a 5 min timeout (new replicas never came up)
+# Check on deployment with a 1 min timeout (new replicas never came up)
 #  if we timeout rollback and error out.
-	@timeout 5m kubectl rollout status deploy deployment --namespace best || { \
+	@timeout 1m kubectl rollout status deploy deployment --namespace best || { \
 		if [ "$?" == "124" ]; then \
 			echo "Deployment timed out"; \
 			kubectl rollout undo deploy deployment --namespace best; \

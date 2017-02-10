@@ -28,7 +28,7 @@ the `kubectl rollout status` command to watch the deployment.
 By default, status will watch the status and exit upon
 successful completion.  Since it's hard to tell what
 a failure is, we rely on timing out using `timeout`.
-In this example we wait for 5 mins.
+In this example we wait for 1 min.
 
 ## Conclusion
 
