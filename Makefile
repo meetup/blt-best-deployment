@@ -36,4 +36,4 @@ __get-credentials: ## Set kubectl ctx to curent cluster config.
 	@gcloud container clusters get-credentials \
 		--zone $(ZONE) \
 		--project $(PROJECT) \
-		$(CLUSTER)
+		$(CLUSTER) 2> /dev/null
