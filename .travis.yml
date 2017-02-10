@@ -10,22 +10,35 @@ env:
     - CI_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER
     - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 
-before_install:
-  # Install gcloud
-  - rm -rf ${HOME}/google-cloud-sdk
-  - curl https://sdk.cloud.google.com | bash;
-  - export PATH=${HOME}/google-cloud-sdk/bin:$PATH
-  - gcloud components install kubectl
+cache:
+  directories:
+    - "$HOME/google-cloud-sdk/"
 
-  # Get those secrets out
+before_deploy:
+  # Install or update GCloud
+  - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
+  - source "$HOME/google-cloud-sdk/path.bash.inc"
+  - gcloud --quiet version
+  - gcloud --quiet components update
+  - gcloud --quiet components update kubectl
+
+  # Credential GCloud
   - echo $GCP_SECRET > client-secret.json
   - gcloud auth activate-service-account --key-file client-secret.json
   - export GOOGLE_APPLICATION_CREDENTIALS="$TRAVIS_BUILD_DIR/client-secret.json"
 
-install:
   # Install envtpl for easy templating.
   - pip install --user envtpl
   - export PATH="$PATH:${HOME}/.local/bin/"
 
+install:
+
+
 script:
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then make deploy; fi
+  - echo "This project does not build"
+
+deploy:
+  - provider: script
+    script: make deploy
+    on:
+      branch: master
